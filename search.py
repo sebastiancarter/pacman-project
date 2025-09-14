@@ -108,7 +108,41 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    startState = problem.getStartState()
+    visited = set()
+    DFSstack = util.Stack()
+    
+    actions = []
+
+    DFSstack.push((startState, []))
+    currFacing = None
+    currCost = None
+    while not DFSstack.isEmpty():
+        currNode, currPlan = DFSstack.pop()
+        if len(currNode) != 2:
+            (coordTupe, currFace, currCost) = currNode
+        else:
+            coordTupe = currNode # have to do this to handle root not having a direction or cost
+            currFace = "Stop"
+            currCost = 0
+
+        if problem.isGoalState(coordTupe):
+            print("GOAL", currNode)
+            return currPlan
+
+        if currNode not in visited:
+            print(currFace, coordTupe)
+            visited.add(currNode)
+            successors = problem.getSuccessors(coordTupe)
+            for node in successors:
+                newCoord, newFace, newCost = node
+                newPlan = currPlan.copy()
+                newPlan.append(newFace)
+                DFSstack.push((node, newPlan))
+        
+        
+    print("goal not found")
+    return None
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
