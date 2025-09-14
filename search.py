@@ -122,7 +122,7 @@ def depthFirstSearch(problem):
         if len(currNode) != 2:
             (coordTupe, currFace, currCost) = currNode
         else:
-            coordTupe = currNode # have to do this to handle root not having a direction or cost
+            coordTupe = currNode # have o do this to handle root not having a direction or cost
             currFace = "Stop"
             currCost = 0
 
@@ -182,7 +182,6 @@ def breadthFirstSearch(problem):
         
     print("goal not found")
     return None
-    util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
