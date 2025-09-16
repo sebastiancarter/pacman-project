@@ -24,6 +24,8 @@ jobs:
     - name: run autograder
       run: |
         python autograder.py > gradeFile.txt
+  autograde:
+    steps:
     - name: question 1 result
       run: |
         ./grader.sh q1
