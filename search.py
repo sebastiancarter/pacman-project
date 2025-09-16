@@ -108,17 +108,106 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    startState = problem.getStartState()
+    visited = set()
+    fringe = util.Stack()
+    
+    actions = []
+    startNode = (startState, "Stop", 0)
+    fringe.push((startNode, []))
+    currFacing = None
+    currCost = None
+    while not fringe.isEmpty():
+        currNode, currPlan = fringe.pop()
+        (currState, currAction, currCost) = currNode
+
+        if problem.isGoalState(currState):
+            print("GOAL", currNode)
+            return currPlan
+
+        if currState not in visited:
+            print(currAction, currState)
+            visited.add(currState)
+            successors = problem.getSuccessors(currState)
+            for node in successors:
+                print(type(node))
+                newState, newAction, newCost = node
+                newPlan = currPlan.copy()
+                newPlan.append(newAction)
+                fringe.push((node, newPlan))
+        
+        
+    print("goal not found")
+    return None
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    startState = problem.getStartState()
+    visited = set()
+    fringe = util.Queue()
+    
+    actions = []
+
+    startNode = (startState, "Stop", 0)
+    fringe.push((startNode, []))
+    while not fringe.isEmpty():
+        currNode, currPlan = fringe.pop()
+        (currState, currAction, currCost) = currNode
+
+        if problem.isGoalState(currState):
+            print("GOAL", currNode)
+            return currPlan
+
+        if currState not in visited:
+            print(currAction, currState)
+            visited.add(currState)
+            successors = problem.getSuccessors(currState)
+            for node in successors:
+                newState, newAction, newCost = node
+                newPlan = currPlan.copy()
+                newPlan.append(newAction)
+                fringe.push((node, newPlan))
+        
+        
+    print("goal not found")
+    return None
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    startState = problem.getStartState()
+    visited = set()
+    fringe = util.PriorityQueue()
+    
+    actions = []
+    bigCost = 0
+    startNode = (startState, "Stop", bigCost)
+    fringe.push((startNode, [], bigCost), bigCost)
+    while not fringe.isEmpty():
+        currNode, currPlan, totCost = fringe.pop()
+        (currState, currAction, currCost) = currNode
+
+        if problem.isGoalState(currState):
+            print("GOAL", currState)
+            return currPlan
+
+        if currState not in visited:
+            print(currAction, currState)
+            visited.add(currState)
+            successors = problem.getSuccessors(currState)
+            for node in successors:
+                newState, newAction, newCost = node
+                newPlan = currPlan.copy()
+                newCost += totCost
+                newPlan.append(newAction)
+                fringe.push((node, newPlan, newCost), newCost)
+        
+        
+    print("goal not found")
+    return None
+
+
 
 def nullHeuristic(state, problem=None):
     """
