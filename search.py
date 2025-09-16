@@ -122,15 +122,12 @@ def depthFirstSearch(problem):
         (currState, currAction, currCost) = currNode
 
         if problem.isGoalState(currState):
-            print("GOAL", currNode)
             return currPlan
 
         if currState not in visited:
-            print(currAction, currState)
             visited.add(currState)
             successors = problem.getSuccessors(currState)
             for node in successors:
-                print(type(node))
                 newState, newAction, newCost = node
                 newPlan = currPlan.copy()
                 newPlan.append(newAction)
@@ -156,11 +153,9 @@ def breadthFirstSearch(problem):
         (currState, currAction, currCost) = currNode
 
         if problem.isGoalState(currState):
-            print("GOAL", currNode)
             return currPlan
 
         if currState not in visited:
-            print(currAction, currState)
             visited.add(currState)
             successors = problem.getSuccessors(currState)
             for node in successors:
@@ -189,11 +184,9 @@ def uniformCostSearch(problem):
         (currState, currAction, currCost) = currNode
 
         if problem.isGoalState(currState):
-            print("GOAL", currState)
             return currPlan
 
         if currState not in visited:
-            print(currAction, currState)
             visited.add(currState)
             successors = problem.getSuccessors(currState)
             for node in successors:
