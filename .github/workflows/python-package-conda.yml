@@ -23,4 +23,19 @@ jobs:
         conda env update --file environment.yml --name base
     - name: run autograder
       run: |
-        python autograder.py
+        python autograder.py > gradeFile.txt
+    - name: question 1 result
+      run: |
+        ./grader.sh q1
+    - name: question 2 result
+      run: |
+        ./grader.sh q2
+    - name: question 3 result
+      run: |
+        ./grader.sh q3
+    - name: question 4 result
+      run: |
+        ./grader.sh q4
+    - name: question 5 result
+      run: |
+        ./grader.sh q5
