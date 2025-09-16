@@ -110,35 +110,31 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     startState = problem.getStartState()
     visited = set()
-    DFSstack = util.Stack()
+    fringe = util.Stack()
     
     actions = []
-
-    DFSstack.push((startState, []))
+    startNode = (startState, "Stop", 0)
+    fringe.push((startNode, []))
     currFacing = None
     currCost = None
-    while not DFSstack.isEmpty():
-        currNode, currPlan = DFSstack.pop()
-        if len(currNode) != 2:
-            (coordTupe, currFace, currCost) = currNode
-        else:
-            coordTupe = currNode # have to do this to handle root not having a direction or cost
-            currFace = "Stop"
-            currCost = 0
+    while not fringe.isEmpty():
+        currNode, currPlan = fringe.pop()
+        (currState, currAction, currCost) = currNode
 
-        if problem.isGoalState(coordTupe):
+        if problem.isGoalState(currState):
             print("GOAL", currNode)
             return currPlan
 
-        if currNode not in visited:
-            print(currFace, coordTupe)
-            visited.add(currNode)
-            successors = problem.getSuccessors(coordTupe)
+        if currState not in visited:
+            print(currAction, currState)
+            visited.add(currState)
+            successors = problem.getSuccessors(currState)
             for node in successors:
-                newCoord, newFace, newCost = node
+                print(type(node))
+                newState, newAction, newCost = node
                 newPlan = currPlan.copy()
-                newPlan.append(newFace)
-                DFSstack.push((node, newPlan))
+                newPlan.append(newAction)
+                fringe.push((node, newPlan))
         
         
     print("goal not found")
@@ -152,7 +148,39 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    startState = problem.getStartState()
+    visited = set()
+    fringe = util.PriorityQueue()
+    
+    actions = []
+    bigCost = 0
+    startNode = (startState, "Stop", bigCost)
+    fringe.push((startNode, [], bigCost), bigCost)
+    currCost = None
+    while not fringe.isEmpty():
+        currNode, currPlan, totCost = fringe.pop()
+        (currState, currAction, currCost) = currNode
+
+        if problem.isGoalState(currState):
+            print("GOAL", currState)
+            return currPlan
+
+        if currState not in visited:
+            print(currAction, currState)
+            visited.add(currState)
+            successors = problem.getSuccessors(currState)
+            for node in successors:
+                newState, newAction, newCost = node
+                newPlan = currPlan.copy()
+                newCost += totCost
+                newPlan.append(newAction)
+                fringe.push((node, newPlan, newCost), newCost)
+        
+        
+    print("goal not found")
+    return None
+
+
 
 def nullHeuristic(state, problem=None):
     """
