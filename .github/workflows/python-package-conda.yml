@@ -24,20 +24,18 @@ jobs:
     - name: run autograder
       run: |
         python autograder.py > gradeFile.txt
-  autograde:
-    steps:
     - name: question 1 result
-      run: |
-        ./grader.sh q1
+      run: ./grader.sh q1
+      id: question_1_test
     - name: question 2 result
-      run: |
-        ./grader.sh q2
+      run: ./grader.sh q2
+      id: question_2_test
     - name: question 3 result
-      run: |
-        ./grader.sh q3
+      run: ./grader.sh q3
+      id: question_3_test
     - name: question 4 result
-      run: |
-        ./grader.sh q4
+      run: ./grader.sh q4
+      id: question_4_test
     - name: question 5 result
-      run: |
-        ./grader.sh q5
+      run: ./grader.sh q5
+      id: question_5_test
