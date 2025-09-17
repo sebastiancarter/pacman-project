@@ -57,13 +57,13 @@ class GoWestAgent(Agent):
 #       after you fill in parts of search.py          #
 #######################################################
 
-def timeLimitedHeuristic(heuristic, state):
+def timeLimitedHeuristic(heuristic, state, problem):
     start = time.time()
-    heuristic(x)
+    val = heuristic(state, problem)
     end = time.time()
-    print(end-start)
     if end - start > 0.0001:
         raise TimeoutError
+    return val
         
 class SearchAgent(Agent):
     """
@@ -103,7 +103,7 @@ class SearchAgent(Agent):
                 raise AttributeError(heuristic + ' is not a function in searchAgents.py or search.py.')
             print(('[SearchAgent] using function %s and heuristic %s' % (fn, heuristic)))
             # Note: this bit of Python trickery combines the search algorithm and the heuristic
-            timeLimitedHeur = lambda s: timeLimitedHeuristic(heur, s)
+            timeLimitedHeur = lambda s, p: timeLimitedHeuristic(heur, s, p)
             self.searchFunction = lambda x: func(x, heuristic=timeLimitedHeur)
 
         # Get the search problem type from the name
