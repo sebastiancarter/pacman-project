@@ -300,9 +300,11 @@ class CornersProblem(search.SearchProblem):
             if not startingGameState.hasFood(*corner):
                 print('Warning: no food in corner ' + str(corner))
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
+
+
         # Please add any code here which you would like to use
         # in initializing the problem
-        "*** YOUR CODE HERE ***"
+        
 
     def getStartState(self):
         """
@@ -310,14 +312,44 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        cornerVisitedTupe = (False, False, False, False)
+
+        startingState = self.getNewState(self.startingPosition, cornerVisitedTupe)
+        return startingState
+        
+
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        coords, cornerVisitedTupe = state
+        # we store all the corners that are visited in cornerVisitedSet
+        # if there is a single corner in the corners of the problem that is not visited yet, you aren't done brah
+        BLvisited, TL_visited, BR_visited, TR_visited = cornerVisitedTupe
+
+        if BLvisited and TL_visited and BR_visited and TR_visited:
+            return True # if all corners have been visited, we hit the goal
+        return False # else we have not
+
+
+
+
+    def getNewState(self, coords, cornerVisitedTupe):
+        BL_visited, TL_visited, BR_visited, TR_visited = cornerVisitedTupe
+        botLeft, topLeft, botRight, topRight = self.corners
+        if botLeft == coords and not BL_visited:
+            BL_visited = True
+        elif topLeft == coords and not TL_visited:
+            TL_visited = True
+        elif botRight == coords and not BR_visited:
+            BR_visited = True
+        elif topRight == coords and not TR_visited:
+            TR_visited = True
+
+        newState = (coords, (BL_visited, TL_visited, BR_visited, TR_visited))
+
+        return newState
 
     def getSuccessors(self, state):
         """
@@ -329,6 +361,9 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
+        
+        coords, cornerVisitedTupe = state
+
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.WEST, Directions.EAST]:
@@ -339,7 +374,17 @@ class CornersProblem(search.SearchProblem):
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
+            x, y = coords
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            if hitsWall: # hitsWall is a boolean
+                continue # we dont add an invalid move to the successors
+
+
+            newState = self.getNewState((nextx, nexty), cornerVisitedTupe)
+            successors.append((newState, action, 1)) # cost is always one according to the comment given above
+
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
