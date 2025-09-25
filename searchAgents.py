@@ -403,6 +403,15 @@ class CornersProblem(search.SearchProblem):
         return len(actions)
 
 
+
+
+def getEuclidianToGoal(coords, goal):
+    goalX, goalY = goal
+    currX, currY = coords
+
+    return ((currX - goalX) ** 2 +  (currY - goalY) ** 2) ** 0.5
+
+
 def cornersHeuristic(state, problem):
     """
     A heuristic for the CornersProblem that you defined.
@@ -419,8 +428,34 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
     corners = problem.corners # These are the corner coordinates
 
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    coords, cornersVisited = state
+    (BL, TL, BR, TR) = corners
+    BL_visited, TL_visited, BR_visited, TR_visited = cornersVisited
+    cornersAndVisitedList = zip([BL, TL, BR, TR], [BL_visited, TL_visited, BR_visited, TR_visited])
+    minDist = None
+    minCorner = None
+    cornersToGo = 0
+    myDict = dict()
+    for corner, isVisited in cornersAndVisitedList:
+        
+        myDict[corner] = isVisited
+
+        if not isVisited:
+            distToCurrCorner = getEuclidianToGoal(coords, corner)
+            if minDist is None or distToCurrCorner < minDist:
+                minDist = distToCurrCorner
+                minCorner = corner
+            cornersToGo += 1
+    
+    myDict[minCorner] = True
+
+    if minDist is None:
+        return 0
+
+    newVisitedTupe = (myDict[BL], myDict[TL], myDict[BR], myDict[TR])
+    return minDist + cornersHeuristic((minCorner, newVisitedTupe), problem)
+
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
