@@ -112,7 +112,6 @@ def depthFirstSearch(problem):
     visited = set()
     fringe = util.Stack()
     
-    actions = []
     startNode = (startState, "Stop", 0)
     fringe.push((startNode, []))
     currFacing = None
@@ -143,8 +142,6 @@ def breadthFirstSearch(problem):
     startState = problem.getStartState()
     visited = set()
     fringe = util.Queue()
-    
-    actions = []
 
     startNode = (startState, "Stop", 0)
     fringe.push((startNode, []))
@@ -164,7 +161,6 @@ def breadthFirstSearch(problem):
                 newPlan.append(newAction)
                 fringe.push((node, newPlan))
         
-        
     print("goal not found")
     return None
 
@@ -175,10 +171,9 @@ def uniformCostSearch(problem):
     visited = set()
     fringe = util.PriorityQueue()
     
-    actions = []
     bigCost = 0
     startNode = (startState, "Stop", bigCost)
-    fringe.push((startNode, [], bigCost), bigCost)
+    fringe.push((startNode, [], 0), bigCost)
     while not fringe.isEmpty():
         currNode, currPlan, totCost = fringe.pop()
         (currState, currAction, currCost) = currNode
@@ -211,17 +206,15 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
     startState = problem.getStartState()
     visited = set()
     fringe = util.PriorityQueue()
     print(heuristic)
     
-    actions = []
     bigCost = 0
     aStarCost = heuristic(startState, problem)
     startNode = (startState, "Stop", bigCost)
-    fringe.push((startNode, [], bigCost), aStarCost)
+    fringe.push((startNode, [], 0), aStarCost)
     while not fringe.isEmpty():
         currNode, currPlan, totCost = fringe.pop()
         (currState, currAction, currCost) = currNode
