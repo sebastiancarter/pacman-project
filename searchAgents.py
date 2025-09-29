@@ -549,4 +549,13 @@ def foodHeuristic(state, problem):
     """
     (position, foodGrid) = state
     "*** YOUR CODE HERE ***"
-    return 0
+    # for ycoorc in range(len(foodGrid))
+    # for xcoord in range(len(foodGrid[0])) 
+    # if foodGrid[ycoord][xcoord] == T: foodCoords.append((ycoord, xcoord))
+    # then loop thru foodCoords and get closest one using either manhattan or euclidian,
+    # then then recursion to get other guys? not sure yet
+    # pronlem is there is not a super uniform distribution of food, so hard to say how good that might be
+    # actually i think this may work perfectly, perfomance should be fine because the problem is relatively simple.? 
+    print("Grid here!")
+    print(foodGrid)
+    return foodGrid.count()
