@@ -411,7 +411,18 @@ def getEuclidianToGoal(coords, goal):
 
     return ((currX - goalX) ** 2 +  (currY - goalY) ** 2) ** 0.5
 
+def getmanhattanToGoal(coords, goal):
+    goalX, goalY = goal
+    currX, currY = coords
 
+    return abs(currX - goalX) +  abs(currY - goalY)
+
+"""
+My approach to solving this problem involves calculating the manhattan distance to the nearest corner, then calculating the manhattan distance from that corner to the next nearest corner, 
+again and again until you have reached the last corner. I came up wtih this solution using a relaxed problem, in which we remove all walls. 
+This approach is the exact solution to the relaxed problem, so we know it is admissible. It is also consistent, because pacman can only move one step at a time, 
+and our heuristic cannot reduce by more than one because manhattan cannot be larger than one, so my heurisitic can never reduce in cost more for any given step more than the actual cost.
+"""
 def cornersHeuristic(state, problem):
     """
     A heuristic for the CornersProblem that you defined.
@@ -425,6 +436,21 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
+    corners = problem.corners # These are the corner coordinates
+    coords, cornersVisited = state
+    distList = []
+    for corner, isVisited in zip(corners, cornersVisited):
+        if not isVisited:
+            distToCurrCorner = getmanhattanToGoal(coords, corner)
+            distList.append(cornersHeuristicIndirectRecursive((corner, cornersVisited), problem) + distToCurrCorner)
+    if len(distList) == 0:
+        return 0
+    
+    return min(distList)
+            
+        
+
+def cornersHeuristicIndirectRecursive(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
     corners = problem.corners # These are the corner coordinates
 
@@ -441,7 +467,7 @@ def cornersHeuristic(state, problem):
         myDict[corner] = isVisited
 
         if not isVisited:
-            distToCurrCorner = getEuclidianToGoal(coords, corner)
+            distToCurrCorner = getmanhattanToGoal(coords, corner)
             if minDist is None or distToCurrCorner < minDist:
                 minDist = distToCurrCorner
                 minCorner = corner
@@ -549,13 +575,40 @@ def foodHeuristic(state, problem):
     """
     (position, foodGrid) = state
     "*** YOUR CODE HERE ***"
-    # for ycoorc in range(len(foodGrid))
-    # for xcoord in range(len(foodGrid[0])) 
-    # if foodGrid[ycoord][xcoord] == T: foodCoords.append((ycoord, xcoord))
-    # then loop thru foodCoords and get closest one using either manhattan or euclidian,
-    # then then recursion to get other guys? not sure yet
-    # pronlem is there is not a super uniform distribution of food, so hard to say how good that might be
-    # actually i think this may work perfectly, perfomance should be fine because the problem is relatively simple.? 
-    print("Grid here!")
-    print(foodGrid)
-    return foodGrid.count()
+    minDist = None
+    minFood = None
+    foodList = foodGrid.asList()
+    if len(foodList) == 0:
+        return 0
+    for i in range(len(foodList)):
+        foodCoord = foodList[i]
+        distance = getmanhattanToGoal(position, foodCoord)
+        if minDist is None or distance < minDist:
+            minDist = distance
+            minFood = i
+            minFoodCoord = foodCoord
+    
+    foodList.pop(minFood)
+    
+
+    return minDist + foodHeurInderictRecursive((minFoodCoord, foodList), problem)
+
+def foodHeurInderictRecursive(state, problem):
+    (position, foodList) = state
+    minDist = None
+    minFood = None
+    if len(foodList) == 0:
+        return 0
+    for i in range(len(foodList)):
+        foodCoord = foodList[i]
+        distance = getmanhattanToGoal(position, foodCoord)
+        if minDist is None or distance < minDist:
+            minDist = distance
+            minFood = i
+            minFoodCoord = foodCoord
+    
+    if minDist is None:
+        return 0
+
+    foodList.pop(minFood)
+    return minDist + foodHeurInderictRecursive((minFoodCoord, foodList), problem)
